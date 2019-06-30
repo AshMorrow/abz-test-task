@@ -16,7 +16,7 @@ class Position extends Migration
         Schema::dropIfExists('position');
         Schema::create('position', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 255);
+            $table->string('name', 255)->unique();
             $table->timestamps();
         });
     }

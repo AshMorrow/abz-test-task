@@ -17,15 +17,15 @@ class CreateEmployees extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 255);
-            $table->string('phone', 12);
+            $table->string('phone', 255);
             $table->string('email', 255);
             $table->float('salary');
-            $table->unsignedBigInteger('position_id');
-            $table->unsignedBigInteger('head');
+            $table->unsignedBigInteger('position_id')->nullable();
+            $table->unsignedBigInteger('head_id')->nullable();
             $table->unsignedBigInteger('admin_updated_id');
             $table->unsignedBigInteger('admin_created_id');
             $table->foreign('position_id')->references('id')->on('position');
-            $table->foreign('head')->references('id')->on('employees');
+            $table->foreign('head_id')->references('id')->on('employees');
             $table->foreign('admin_updated_id')->references('id')->on('users');
             $table->foreign('admin_created_id')->references('id')->on('users');
             $table->timestamps();

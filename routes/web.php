@@ -12,6 +12,11 @@
 */
 
 
-Auth::routes(['register' => false]);
+Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::redirect('/', '/admin/employees/list');
+Route::get('/admin/employees/list', 'EmployeesController@showList')->name('employees');
+Route::get('/admin/employees/edit/{id}', 'EmployeesController@edit')->name('employees.edit');
+
+// Ajax
+Route::get('/admin/employees/get-list', 'EmployeesController@getListData')->name('employees.data');

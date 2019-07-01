@@ -21,6 +21,7 @@ $factory->define(Employees::class, function (Faker $faker) {
 });
 
 $factory->afterCreating(Employees::class, function($employees) {
+    // bad and slow design... but work for me
     $employees->head_id = App\Employees::where('id', '!=', $employees->id)->inRandomOrder()->first()->id;
     $employees->save();
 });

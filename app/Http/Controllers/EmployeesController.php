@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Employees;
+use App\Position;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
-use App\Employees;
 
 class EmployeesController extends Controller
 {
@@ -16,11 +17,6 @@ class EmployeesController extends Controller
     public function showList()
     {
         return view('employees.list');
-    }
-
-    public function edit($id){
-        $employess = Employees::find($id) ?? new Employees();
-        return view('employees.edit', compact($employess));
     }
 
     public function getListData()
@@ -36,12 +32,54 @@ class EmployeesController extends Controller
         ]);
 
         return Datatables::of($employees)
-            ->addColumn('action', function ($employees) {
+            ->addColumn('action', function ($employee) {
                 return '
-                    <a href="'.route('employees.edit', $employees->id).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>
-                    <a href="#edit-'.$employees->id.'" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Delete</a>
+                    <a href="'.route('employees.edit', $employee->id).'" class="btn btn-xs btn-primary btn-flat">
+                        <i class="glyphicon glyphicon-edit"></i> Edit
+                    </a>
+                    <button 
+                        class="btn btn-xs btn-danger btn-flat"
+                        onclick="showDeletePopup(\''.route('employees.delete', $employee->id).'\', \''.$employee->name.'\')"                        
+                    >
+                        <i class="glyphicon glyphicon-trash"></i> Delete
+                    </button>
                 ';
             })
             ->make(true);
+    }
+
+    public function edit(Request $request, $id = null){
+        $employee = $id ? Employees::find($id) : new Employees();
+        $positions = Position::all();
+
+        if ($request->isMethod('post')){
+            $attributes = $request->validate([
+                'name' => 'required|max:255',
+                'email' => 'required',
+                'phone' => 'required',
+                'salary' => 'required',
+                'position_id' => 'required|numeric'
+            ]);
+
+            $admin_user = $request->user()->id;
+            $employee->fill($attributes);
+            $employee->admin_updated_id = $admin_user;
+            $employee->admin_created_id = $admin_user;
+            $employee->save();
+
+            return redirect()
+                ->route('employees.edit', ['id' => $employee->id])
+                ->with('status', 'Profile updated!')
+            ;
+        }
+
+        return view('employees.edit', [
+            'employee' => $employee,
+            'positions' => $positions
+        ]);
+    }
+
+    public function delete($id) {
+        Employees::find($id)->delete();
     }
 }

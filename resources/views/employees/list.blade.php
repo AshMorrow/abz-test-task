@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'AdminLTE')
+@section('title', 'Employees list')
 
 @section('content_header')
     <h1>Employees</h1>
@@ -24,12 +24,12 @@
             </table>
         </div>
     </div>
+    @include('modals.delete_modal')
 @stop
 
-@push('scripts')
+@push('js')
 <script>
-$(function() {
-    $('#employees_table').DataTable({
+    var $table = $('#employees_table').DataTable({
         processing: true,
         serverSide: true,
         ajax: '{!! route('employees.data') !!}',
@@ -38,8 +38,29 @@ $(function() {
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
             { data: 'action', name: 'action'},
-        ]
+        ],
     });
-});
+
+    var $modal = $('#remove_confirmation_modal');
+    function showDeletePopup(employeeUrl, employeeName) {
+        $modal.find('.modal-title').text('Delete employee');
+        $modal.find('.modal-text').html('Are you sure you want to delete ' + '<strong>' + employeeName + '</strong>');
+        $modal.attr('action', employeeUrl)
+        $modal.modal('show');
+    }
+
+    $modal.on('submit', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            url: $modal.attr('action'),
+            data: $modal.serialize(),
+            success: function () {
+                $modal.modal('hide');
+                $table.ajax.reload(null, false)
+            }
+        });
+    })
 </script>
 @endpush

@@ -110,9 +110,14 @@ return [
     'menu' => [
         'MAIN NAVIGATION',
         [
-            'text'        => 'Emplouees',
+            'text'        => 'Employees list',
             'url'         => 'admin/employees/list',
             'icon'        => 'users',
+        ],
+        [
+            'text'        => 'Positions list',
+            'url'         => 'admin/positions/list',
+            'icon'        => 'book',
         ],
     ],
 
@@ -151,5 +156,7 @@ return [
         'datatables' => true,
         'select2'    => true,
         'chartjs'    => true,
+        'datepicker' => true,
+        'inputmask' => true,
     ],
 ];

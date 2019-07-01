@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Employees;
 use App\Position;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Intervention\Image\Facades\Image;
 use Yajra\Datatables\Datatables;
 
 class EmployeesController extends Controller
@@ -28,7 +30,7 @@ class EmployeesController extends Controller
             'email',
             'salary',
             'position_id',
-            'head_id'
+            'head_id',
         ]);
 
         return Datatables::of($employees)
@@ -48,7 +50,8 @@ class EmployeesController extends Controller
             ->make(true);
     }
 
-    public function edit(Request $request, $id = null){
+    public function edit(Request $request, $id = null)
+    {
         $employee = $id ? Employees::find($id) : new Employees();
         $positions = Position::all();
 
@@ -58,8 +61,26 @@ class EmployeesController extends Controller
                 'email' => 'required',
                 'phone' => 'required',
                 'salary' => 'required',
-                'position_id' => 'required|numeric'
+                'head_id' => 'numeric',
+                'position_id' => 'required|numeric',
+                'photo' => [
+                    'image',
+                    'max:5120',
+                    'mimes:jpeg,png',
+                    Rule::dimensions()->minWidth(300)->minHeight(300)
+                ]
             ]);
+            $uploaded_image = $request->file('photo');
+
+            if ($uploaded_image) {
+                $photo = Image::make($request->file('photo'));
+                if ($photo->width() > 300 || $photo->height() > 300) {
+                    $photo->resize(300, 300);
+                }
+
+                $photo->save('storage/'.$uploaded_image->hashName(), 80, 'jpg');
+            }
+            dd($photo);
 
             $admin_user = $request->user()->id;
             $employee->fill($attributes);
@@ -79,9 +100,24 @@ class EmployeesController extends Controller
         ]);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $newHead = Employees::inRandomOrder()->first();
         Employees::where('head_id', '=', $id)->update(['head_id' => $newHead->id]);
         Employees::find($id)->delete();
+    }
+
+    public function getHeadData(Request $request)
+    {
+        $heads = Employees::where('name', 'like', "%{$request->get('term')}%")
+            ->select('id', 'name as label')
+            ->take(10)
+            ->get()
+            ->toArray()
+        ;
+
+        return response()->json(
+            $heads
+        );
     }
 }

@@ -28,4 +28,6 @@ Route::post('/admin/positions/delete/{id}', 'PositionController@delete')->name('
 
 // Ajax
 Route::get('/admin/employees/get-list', 'EmployeesController@getListData')->name('employees.data');
+Route::get('/admin/employees/get-head', 'EmployeesController@getHeadData')->name('employees.get_head');
+
 Route::get('/admin/positions/get-list', 'PositionController@getListData')->name('positions.data');

@@ -9,8 +9,11 @@
                 <h3 class="box-title">Employee edit</h3>
             </div>
             <div class="box-body">
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     @csrf
+                    <div class="form-group" >
+                        <input type="file" name="photo">
+                    </div>
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                         <label for="employee_name">Name</label>
                         <input id="employee_name" name="name" type="text" class="form-control" value="{{$employee->name}}" maxlength="255">
@@ -52,9 +55,8 @@
                     </div>
                     <div class="form-group">
                         <label for="employee_head">Head</label>
-                        <select id="employee_head" class="form-control">
-                            <option  type="text"  value="">{{ $employee->head_id }}</option>
-                        </select>
+                        <input id="employee_head" type="text" class="form-control" value="{{ @$employee->head()->name }}">
+                        <input id="employee_head_id" type="hidden" name="head_id" value="{{ $employee->head_id }}">
                     </div>
                     <div class="form-group">
                         <label for="employee_employment_date">Date of employment</label>
@@ -94,17 +96,33 @@
             </div>
         </div>
     </div>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 @stop
 
 @push('js')
     <script>
+
         $(function () {
+            $('#employee_head').autocomplete({
+                source: "{!! route('employees.get_head') !!}",
+                minLength: 2,
+                select: function (event, ui) {
+                    $('#employee_head_id').val(ui.item.id); // save selected id to hidden input
+                }
+            });
+
             $('#employee_position').select2({
                 width: '100%'
             });
-            $('#employee_head').select2({
-                width: '100%'
-            });
+
             $('#employee_phone').inputmask({"mask": "+389 (99) 999 99 99"});
             $("#employee_email").inputmask({"alias": "email"});
             $('#employee_employment_date').datepicker();

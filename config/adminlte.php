@@ -158,5 +158,6 @@ return [
         'chartjs'    => true,
         'datepicker' => true,
         'inputmask' => true,
+        'autocomplete' => true,
     ],
 ];

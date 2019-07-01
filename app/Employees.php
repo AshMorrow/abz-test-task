@@ -20,4 +20,8 @@ class Employees extends Model
     public function position() {
         return $this->hasOne('App\Position');
     }
+
+    public function head() {
+        return \App\Employees::find($this->head_id);
+    }
 }

@@ -1,5 +1,8 @@
 <?php
 
+use Intervention\Image\ImageServiceProvider;
+use Yajra\DataTables\DataTablesServiceProvider;
+
 return [
 
     /*
@@ -161,11 +164,13 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Yajra\Datatables\DatatablesServiceProvider::class,
 
         /*
          * Package Service Providers...
          */
+
+        Yajra\Datatables\DatatablesServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -227,6 +232,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

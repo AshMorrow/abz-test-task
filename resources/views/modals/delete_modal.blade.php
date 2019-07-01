@@ -17,3 +17,29 @@
         </div>
     </div>
 </form>
+
+@push('js')
+    <script>
+        var $modal = $('#remove_confirmation_modal');
+        function showDeletePopup(url, name) {
+            $modal.find('.modal-title').text('Delete');
+            $modal.find('.modal-text').html('Are you sure you want to delete ' + '<strong>' + name + '</strong>');
+            $modal.attr('action', url)
+            $modal.modal('show');
+        }
+
+        $modal.on('submit', function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: $modal.attr('action'),
+                data: $modal.serialize(),
+                success: function () {
+                    $modal.modal('hide');
+                    $currentDataTable.ajax.reload(null, false)
+                }
+            });
+        })
+    </script>
+@endpush

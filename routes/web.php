@@ -15,12 +15,16 @@
 Auth::routes();
 
 Route::redirect('/', '/admin/employees/list');
-Route::get('/admin/employees/list', 'EmployeesController@showList')->name('employees.list');
+
+// Employees
+Route::get('/admin/employees/list', 'EmployeesController@show')->name('employees.list');
 Route::match(['get', 'post'], '/admin/employees/edit/{id?}', 'EmployeesController@edit')->name('employees.edit');
 Route::post('/admin/employees/delete/{id}', 'EmployeesController@delete')->name('employees.delete');
 
-Route::get('/admin/positions/list', 'PositionController@showList')->name('positions.list');
+// Positions
+Route::get('/admin/positions/list', 'PositionController@show')->name('positions.list');
 Route::match(['get', 'post'], '/admin/positions/edit/{id?}', 'PositionController@edit')->name('positions.edit');
+Route::post('/admin/positions/delete/{id}', 'PositionController@delete')->name('positions.delete');
 
 // Ajax
 Route::get('/admin/employees/get-list', 'EmployeesController@getListData')->name('employees.data');

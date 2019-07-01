@@ -13,10 +13,9 @@ class PositionController extends Controller
         $this->middleware('auth');
     }
 
-    public function showList()
+    public function show()
     {
-        $get_list_url = route('positions.data');
-        return view('position.list',  ['get_list_url' => $get_list_url]);
+        return view('position.list');
     }
 
     public function getListData()
@@ -34,7 +33,7 @@ class PositionController extends Controller
                     </a>
                     <button 
                         class="btn btn-xs btn-danger btn-flat"
-                        onclick="showDeletePopup(\''.route('employees.delete', $position->id).'\', \''.$position->name.'\')"                        
+                        onclick="showDeletePopup(\''.route('positions.delete', $position->id).'\', \''.$position->name.'\')"                        
                     >
                         <i class="glyphicon glyphicon-trash"></i> Delete
                     </button>
@@ -53,5 +52,9 @@ class PositionController extends Controller
         }
 
         return view('position.edit', ['position' => $position]);
+    }
+
+    public function delete($id) {
+        Position::find($id)->delete();
     }
 }

@@ -26,7 +26,7 @@ class CreateEmployees extends Migration
             $table->unsignedBigInteger('head_id')->nullable();
             $table->unsignedBigInteger('admin_updated_id');
             $table->unsignedBigInteger('admin_created_id');
-            $table->foreign('position_id')->references('id')->on('position');
+            $table->foreign('position_id')->references('id')->on('position')->onDelete('set null');
             $table->foreign('head_id')->references('id')->on('employees');
             $table->foreign('admin_updated_id')->references('id')->on('users');
             $table->foreign('admin_created_id')->references('id')->on('users');

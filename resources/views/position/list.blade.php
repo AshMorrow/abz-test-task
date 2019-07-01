@@ -10,6 +10,7 @@
     <div class="box col-md-6">
         <div class="box-header">
             <h3 class="box-title">Employees list</h3>
+            <a href="{!! route('positions.edit') !!}" class="btn btn-warning btn-flat pull-right">Create</a>
         </div>
         <div class="box-body">
             <table class="table table-bordered" id="employees_table">
@@ -29,16 +30,15 @@
 
 @push('js')
     <script>
-        var $table = $('#employees_table').DataTable({
+        var $currentDataTable = $('#employees_table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{!! $get_list_url !!}',
+            ajax: '{!! route('positions.data') !!}',
             columns: [
                 { data: 'id', name: 'id' },
                 { data: 'name', name: 'name' },
                 { data: 'action', name: 'action'},
             ]
         });
-
     </script>
 @endpush

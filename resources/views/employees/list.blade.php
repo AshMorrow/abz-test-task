@@ -10,6 +10,7 @@
     <div class="box col-md-6">
         <div class="box-header">
             <h3 class="box-title">Employees list</h3>
+            <a href="{!! route('employees.edit') !!}" class="btn btn-warning btn-flat pull-right">Create</a>
         </div>
         <div class="box-body">
             <table class="table table-bordered" id="employees_table">
@@ -29,7 +30,7 @@
 
 @push('js')
 <script>
-    var $table = $('#employees_table').DataTable({
+    var $currentDataTable = $('#employees_table').DataTable({
         processing: true,
         serverSide: true,
         ajax: '{!! route('employees.data') !!}',
@@ -40,27 +41,5 @@
             { data: 'action', name: 'action'},
         ],
     });
-
-    var $modal = $('#remove_confirmation_modal');
-    function showDeletePopup(employeeUrl, employeeName) {
-        $modal.find('.modal-title').text('Delete employee');
-        $modal.find('.modal-text').html('Are you sure you want to delete ' + '<strong>' + employeeName + '</strong>');
-        $modal.attr('action', employeeUrl)
-        $modal.modal('show');
-    }
-
-    $modal.on('submit', function (e) {
-        e.preventDefault();
-
-        $.ajax({
-            type: 'POST',
-            url: $modal.attr('action'),
-            data: $modal.serialize(),
-            success: function () {
-                $modal.modal('hide');
-                $table.ajax.reload(null, false)
-            }
-        });
-    })
 </script>
 @endpush

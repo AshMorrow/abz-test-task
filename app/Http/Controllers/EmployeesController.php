@@ -14,7 +14,7 @@ class EmployeesController extends Controller
         $this->middleware('auth');
     }
 
-    public function showList()
+    public function show()
     {
         return view('employees.list');
     }
@@ -39,7 +39,7 @@ class EmployeesController extends Controller
                     </a>
                     <button 
                         class="btn btn-xs btn-danger btn-flat"
-                        onclick="showDeletePopup(\''.route('employees.delete', $employee->id).'\', \''.$employee->name.'\')"                        
+                        onclick="showDeletePopup(\''.route('employees.delete', $employee->id).'\', \''.addslashes($employee->name).'\')"                        
                     >
                         <i class="glyphicon glyphicon-trash"></i> Delete
                     </button>
@@ -80,6 +80,8 @@ class EmployeesController extends Controller
     }
 
     public function delete($id) {
+        $newHead = Employees::inRandomOrder()->first();
+        Employees::where('head_id', '=', $id)->update(['head_id' => $newHead->id]);
         Employees::find($id)->delete();
     }
 }

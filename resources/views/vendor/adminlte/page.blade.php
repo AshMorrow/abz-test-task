@@ -123,6 +123,8 @@
             </div>
             <!-- /.container -->
             @endif
+
+            <div class="clearfix"></div>
         </div>
         <!-- /.content-wrapper -->
 

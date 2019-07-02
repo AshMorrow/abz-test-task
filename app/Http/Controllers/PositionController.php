@@ -49,6 +49,12 @@ class PositionController extends Controller
             $attributes = $request->validate([
                 'name' => 'required|max:255'
             ]);
+
+            $position->fill($attributes)->save();
+            return redirect()
+                ->route('positions.edit', ['id' => $position->id])
+                ->with('status', 'Profile updated!')
+            ;
         }
 
         return view('position.edit', ['position' => $position]);

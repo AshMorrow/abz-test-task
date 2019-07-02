@@ -11,6 +11,11 @@
             <div class="box-body">
                 <form method="post" enctype="multipart/form-data">
                     @csrf
+                    <div class="form-group">
+                        @if ($employee->photo)
+                            <img src="{!! asset('storage/'.$employee->photo) !!}">
+                        @endif
+                    </div>
                     <div class="form-group" >
                         <input type="file" name="photo">
                     </div>
@@ -30,7 +35,7 @@
                     </div>
                     <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                         <label for="employee_email">Email</label>
-                        <input id="employee_email" name="email" type="text" class="form-control" value="{{$employee->email}}">
+                        <input id="employee_email" name="email" type="email" class="form-control" value="{{$employee->email}}">
                         @if($errors->has('email'))
                             <span class="help-block">{{ $errors->first('email') }}</span>
                         @endif
@@ -60,18 +65,22 @@
                     </div>
                     <div class="form-group">
                         <label for="employee_employment_date">Date of employment</label>
-                        <input id="employee_employment_date" type="text" class="form-control">
+                        <input id="employee_employment_date"
+                               type="text" name="employment_date"
+                               class="form-control"
+                               autocomplete="off"
+                               value="{{ $employee->getConvertedEmploymentDate() }}">
                     </div>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
                                 <div>
                                     <strong>Created at:</strong>
-                                    <span>{{ $employee->created_at }}</span>
+                                    <span>{{ $employee->created_at ? $employee->created_at->format('d-m-Y') : '' }}</span>
                                 </div>
                                 <div>
                                     <strong>Updated at:</strong>
-                                    <span>{{ $employee->updated_at }}</span>
+                                    <span>{{ $employee->updated_at ? $employee->updated_at->format('d-m-Y') : '' }}</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -97,7 +106,7 @@
         </div>
     </div>
     @if ($errors->any())
-        <div class="alert alert-danger">
+        <div class="alert alert-danger col-md-6">
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -113,7 +122,6 @@
         $(function () {
             $('#employee_head').autocomplete({
                 source: "{!! route('employees.get_head') !!}",
-                minLength: 2,
                 select: function (event, ui) {
                     $('#employee_head_id').val(ui.item.id); // save selected id to hidden input
                 }
@@ -123,9 +131,10 @@
                 width: '100%'
             });
 
-            $('#employee_phone').inputmask({"mask": "+389 (99) 999 99 99"});
-            $("#employee_email").inputmask({"alias": "email"});
-            $('#employee_employment_date').datepicker();
+            $('#employee_phone').inputmask({"mask": "+399(99)9999999"});
+            $('#employee_employment_date').datepicker({
+                format: 'mm.dd.yy',
+            });
         });
     </script>
 @endpush

@@ -14,7 +14,8 @@ class Employees extends Model
         'email',
         'salary',
         'position_id',
-        'head_id'
+        'head_id',
+        'employment_date'
     ];
 
     public function position() {
@@ -23,5 +24,9 @@ class Employees extends Model
 
     public function head() {
         return \App\Employees::find($this->head_id);
+    }
+
+    public function getConvertedEmploymentDate() {
+        return date('d.m.y', strtotime($this->employment_date));
     }
 }

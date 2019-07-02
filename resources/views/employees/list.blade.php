@@ -16,7 +16,7 @@
             <table class="table table-bordered" id="employees_table">
                 <thead>
                     <tr>
-                        <th>Id</th>
+                        <th>Photo</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Action</th>
@@ -35,10 +35,10 @@
         serverSide: true,
         ajax: '{!! route('employees.data') !!}',
         columns: [
-            { data: 'id', name: 'id' },
+            { data: 'photo', name: 'photo', orderable: false, searchable: false, width: '70px'},
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
-            { data: 'action', name: 'action'},
+            { data: 'action', name: 'action', orderable: false, searchable: false},
         ],
     });
 </script>

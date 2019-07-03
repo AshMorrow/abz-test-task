@@ -11,9 +11,10 @@ $factory->define(Employees::class, function (Faker $faker) {
 
     return [
         'name' => $faker->name,
-        'phone' => $faker->unique()->tollFreePhoneNumber,
+        'phone' => $faker->unique()->e164PhoneNumber,
         'email' => $faker->unique()->safeEmail,
         'salary' => $faker->randomFloat($nbMaxDecimals = 3, $min = 0, $max = 500,000),
+        'employment_date' => $faker->date(),
         'position_id' => $position,
         'admin_updated_id' => $admin_user,
         'admin_created_id' => $admin_user

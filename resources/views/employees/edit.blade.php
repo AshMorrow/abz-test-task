@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="col-md-6">
-        <div class="box">
+        <div class="box box-danger">
             <div class="box-header with-border">
                 <h3 class="box-title">Employee edit</h3>
             </div>
@@ -16,8 +16,11 @@
                             <img src="{!! asset('storage/'.$employee->photo) !!}">
                         @endif
                     </div>
-                    <div class="form-group" >
+                    <div class="form-group {{ $errors->has('photo') ? 'has-error' : '' }}">
                         <input type="file" name="photo">
+                        @if($errors->has('photo'))
+                            <span class="help-block">{{ $errors->first('photo') }}</span>
+                        @endif
                     </div>
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                         <label for="employee_name">Name</label>
@@ -40,11 +43,14 @@
                             <span class="help-block">{{ $errors->first('email') }}</span>
                         @endif
                     </div>
-                    <div class="form-group">
+                    <div class="form-group {{ $errors->has('salary') ? 'has-error' : '' }}">
                         <label for="employee_salary">Salary, $</label>
                         <input id="employee_salary" name="salary" type="text" class="form-control" value="{{$employee->salary}}">
+                        @if($errors->has('salary'))
+                            <span class="help-block">{{ $errors->first('salary') }}</span>
+                        @endif
                     </div>
-                    <div class="form-group">
+                    <div class="form-group {{ $errors->has('position_id') ? 'has-error' : '' }}">
                         <label for="employee_position">Position</label>
                         <select id="employee_position" name="position_id" type="text" class="form-control">
                             <option value="">---</option>
@@ -57,20 +63,31 @@
                                 </option>
                             @endforeach
                         </select>
+                        @if($errors->has('position_id'))
+                            <span class="help-block">{{ $errors->first('position_id') }}</span>
+                        @endif
                     </div>
-                    <div class="form-group">
+                    <div class="form-group {{ $errors->has('head_id') ? 'has-error' : '' }}">
                         <label for="employee_head">Head</label>
                         <input id="employee_head" type="text" class="form-control" value="{{ @$employee->head()->name }}">
                         <input id="employee_head_id" type="hidden" name="head_id" value="{{ $employee->head_id }}">
+                        @if($errors->has('head_id'))
+                            <span class="help-block">{{ $errors->first('head_id') }}</span>
+                        @endif
                     </div>
-                    <div class="form-group">
+                    <div class="form-group {{ $errors->has('employment_date') ? 'has-error' : '' }}">
                         <label for="employee_employment_date">Date of employment</label>
                         <input id="employee_employment_date"
                                type="text" name="employment_date"
                                class="form-control"
                                autocomplete="off"
                                value="{{ $employee->getConvertedEmploymentDate() }}">
+
+                        @if($errors->has('employment_date'))
+                            <span class="help-block">{{ $errors->first('employment_date') }}</span>
+                        @endif
                     </div>
+
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
@@ -95,6 +112,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="box-footer">
                         <div class="pull-right">
                             <a href="{!! route('employees.list') !!}" class="btn btn-default btn-flat">Cancel</a>
@@ -105,15 +123,6 @@
             </div>
         </div>
     </div>
-    @if ($errors->any())
-        <div class="alert alert-danger col-md-6">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 @stop
 
 @push('js')

@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="col-md-6">
-        <div class="box">
+        <div class="box box-danger">
             <div class="box-header with-border">
                 <h3 class="box-title">Position edit</h3>
             </div>
@@ -17,6 +17,30 @@
                         @if($errors->has('name'))
                             <span class="help-block">{{ $errors->first('name') }}</span>
                         @endif
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div>
+                                    <strong>Created at:</strong>
+                                    <span>{{ $position->created_at ? $position->created_at->format('d-m-Y') : '' }}</span>
+                                </div>
+                                <div>
+                                    <strong>Updated at:</strong>
+                                    <span>{{ $position->updated_at ? $position->updated_at->format('d-m-Y') : '' }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div>
+                                    <strong>Admin created id:</strong>
+                                    <span>{{ $position->admin_created_id }}</span>
+                                </div>
+                                <div>
+                                    <strong>Admin updated id:</strong>
+                                    <span>{{ $position->admin_updated_id }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="box-footer">

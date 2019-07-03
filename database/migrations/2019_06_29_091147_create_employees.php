@@ -20,7 +20,7 @@ class CreateEmployees extends Migration
             $table->string('phone', 255);
             $table->string('email', 255);
             $table->string('photo', 255)->nullable();
-            $table->float('salary');
+            $table->float('salary', 9,3);
             $table->date('employment_date');
             $table->unsignedBigInteger('position_id')->nullable();
             $table->unsignedBigInteger('head_id')->nullable();

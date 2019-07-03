@@ -6,58 +6,21 @@ use App\Employees;
 
 class EmployeeObserver
 {
-    /**
-     * Handle the employees "created" event.
-     *
-     * @param  \App\Employees  $employees
-     * @return void
-     */
-    public function created(Employees $employees)
+    public function creating(Employees $employees)
     {
-        //
+        $admin_id = auth()->user()->id;
+        $employees->admin_created_id = $admin_id;
+        $employees->admin_updated_id = $admin_id;
     }
 
-    /**
-     * Handle the employees "updated" event.
-     *
-     * @param  \App\Employees  $employees
-     * @return void
-     */
-    public function updated(Employees $employees)
+    public function updating(Employees $employees)
     {
-        //
+        $employees->admin_updated_id = auth()->user()->id;
     }
 
-    /**
-     * Handle the employees "deleted" event.
-     *
-     * @param  \App\Employees  $employees
-     * @return void
-     */
     public function deleted(Employees $employees)
     {
-        //
-    }
-
-    /**
-     * Handle the employees "restored" event.
-     *
-     * @param  \App\Employees  $employees
-     * @return void
-     */
-    public function restored(Employees $employees)
-    {
-        //
-    }
-
-    /**
-     * Handle the employees "force deleted" event.
-     *
-     * @param  \App\Employees  $employees
-     * @return void
-     */
-    public function forceDeleted(Employees $employees)
-    {
-        //
+        $newHead = Employees::inRandomOrder()->first();
+        Employees::where('head_id', '=', $employees->id)->update(['head_id' => $newHead->id]);
     }
 }

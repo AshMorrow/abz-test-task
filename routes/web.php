@@ -19,7 +19,7 @@ Route::redirect('/', '/admin/employees/list');
 // Employees
 Route::get('/admin/employees/list', 'EmployeesController@show')->name('employees.list');
 Route::match(['get', 'post'], '/admin/employees/edit/{id?}', 'EmployeesController@edit')->name('employees.edit');
-Route::post('/admin/employees/delete/{id}', 'EmployeesController@delete')->name('employees.delete');
+Route::get('/admin/employees/delete/{id}', 'EmployeesController@delete')->name('employees.delete');
 
 // Positions
 Route::get('/admin/positions/list', 'PositionController@show')->name('positions.list');

@@ -25,19 +25,23 @@ class EmployeesController extends Controller
     public function getListData()
     {
         $employees = \App\Employees::select([
-            'id',
-            'name',
-            'phone',
-            'email',
-            'photo',
-            'salary',
-            'position_id',
-            'head_id',
-        ]);
+            'employees.id',
+            'employees.name',
+            'employees.phone',
+            'employees.email',
+            'employees.photo',
+            'employees.salary',
+            \DB::raw('DATE_FORMAT(employees.employment_date, "%d.%m.%y") as employment_date'),
+            \DB::raw('position.name as position_name'),
+        ])->join('position', 'employees.position_id', '=', 'position.id');
 
         return Datatables::of($employees)
             ->addColumn('photo', function ($employee) {
-                return '<img src="'.asset('storage/'.$employee->photo).'" alt="" width="70" height="70" />';
+                $image_path = Storage::disk('public')->has($employee->photo) ? 'storage/'.$employee->photo : 'image/avatar-default.jpg';
+                return '<img src="'.asset($image_path).'" alt="user avatar" width="70" height="70" />';
+            })
+            ->addColumn('salary', function ($employee) {
+                return '$'. $employee->salary;
             })
             ->addColumn('action', function ($employee) {
                 return '
@@ -67,11 +71,11 @@ class EmployeesController extends Controller
                 'name' => 'required|max:255',
                 'email' => 'required|email',
                 'phone' => 'required|regex:/(\+3[0-9]{2})(\([0-9]{2}\))[0-9]{7}/',
-                'salary' => 'required',
-                'head_id' => 'exists:employees,id',
+                'salary' => 'required|numeric|between:0,500.000',
+                'head_id' => 'nullable|exists:employees,id',
                 'position_id' => 'exists:position,id',
                 /*
-                 *  Why it dose`nt work ?
+                 *  Why it doesn't work ?
                  * 'employment_date' => 'required|date_format:"d-m-y"'
                 */
                 'employment_date' => 'required',
@@ -82,6 +86,7 @@ class EmployeesController extends Controller
                     Rule::dimensions()->minWidth(300)->minHeight(300)
                 ]
             ]);
+
             $uploaded_photo = $request->file('photo');
 
             if ($uploaded_photo) {
@@ -100,11 +105,8 @@ class EmployeesController extends Controller
                 $employee->photo = $photo_name;
             }
 
-            $admin_user = $request->user()->id;
             $employee->fill($attributes);
             $employee->employment_date = date("Y-m-d", strtotime($request->post('employment_date')));
-            $employee->admin_updated_id = $admin_user;
-            $employee->admin_created_id = $admin_user;
             $employee->save();
 
             return redirect()
@@ -121,8 +123,6 @@ class EmployeesController extends Controller
 
     public function delete($id)
     {
-        $newHead = Employees::inRandomOrder()->first();
-        Employees::where('head_id', '=', $id)->update(['head_id' => $newHead->id]);
         Employees::find($id)->delete();
     }
 

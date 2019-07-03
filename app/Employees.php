@@ -19,7 +19,7 @@ class Employees extends Model
     ];
 
     public function position() {
-        return $this->hasOne('App\Position');
+        return $this->belongsTo('App\Position');
     }
 
     public function head() {
@@ -27,6 +27,7 @@ class Employees extends Model
     }
 
     public function getConvertedEmploymentDate() {
-        return date('d.m.y', strtotime($this->employment_date));
+        $timestamp = $this->employment_date ? strtotime($this->employment_date) : time() ;
+        return date('d.m.y', $timestamp);
     }
 }

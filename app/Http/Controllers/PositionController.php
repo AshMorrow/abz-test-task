@@ -22,7 +22,8 @@ class PositionController extends Controller
     {
         $positions = \App\Position::select([
             'id',
-            'name'
+            'name',
+            \DB::raw('DATE_FORMAT(updated_at, "%d.%m.%y") as last_update')
         ]);
 
         return Datatables::of($positions)

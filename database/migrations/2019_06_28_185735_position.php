@@ -17,6 +17,10 @@ class Position extends Migration
         Schema::create('position', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 255)->unique();
+            $table->unsignedBigInteger('admin_updated_id');
+            $table->unsignedBigInteger('admin_created_id');
+            $table->foreign('admin_updated_id')->references('id')->on('users');
+            $table->foreign('admin_created_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

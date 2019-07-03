@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
 
 class PositionTableSeeder extends Seeder
@@ -11,15 +12,21 @@ class PositionTableSeeder extends Seeder
      */
     public function run()
     {
-        $postions = [
+        $positions = [
             'Lead designer',
             'Backend developer',
             'Frontend developer'
         ];
 
-        foreach ($postions as $postion) {
+        $admin_user = App\User::first()->id;
+
+        foreach ($positions as $postion) {
             if (!App\Position::where('name', $postion)->count()) {
-                App\Position::create(['name' => $postion]);
+                App\Position::create([
+                    'name' => $postion,
+                    'admin_created_id' => $admin_user,
+                    'admin_updated_id' => $admin_user
+                ]);
             }
 
         }

@@ -96,10 +96,9 @@ class EmployeesController extends Controller
                     $photo->resize(300, 300);
                 }
 
-                $photo_name = $uploaded_photo->hashName();
-                $photo->encode('jpg', 80);
+                $photo_name = uniqid().'.jpg';
+                $photo->save('storage/'.$photo_name, 80, 'jpg');
 
-                Storage::disk('public')->put($photo_name, $photo);
                 Storage::disk('public')->delete($employee->photo);
 
                 $employee->photo = $photo_name;

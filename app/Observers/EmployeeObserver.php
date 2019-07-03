@@ -18,7 +18,7 @@ class EmployeeObserver
         $employees->admin_updated_id = auth()->user()->id;
     }
 
-    public function deleted(Employees $employees)
+    public function deleting(Employees $employees)
     {
         $newHead = Employees::inRandomOrder()->first();
         Employees::where('head_id', '=', $employees->id)->update(['head_id' => $newHead->id]);
